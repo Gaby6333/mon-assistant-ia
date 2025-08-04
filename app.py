@@ -18,12 +18,50 @@ def init_db():
     conn.commit()
     conn.close()
 
+def init_tasks_db():
+    conn = sqlite3.connect("history.db")
+    c = conn.cursor()
+    c.execute(
+        """
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            description TEXT,
+            due_date DATE,
+            is_done INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+
+# --- Fonctions de sauvegarde ---
 def save_summary(original: str, summary: str):
     conn = sqlite3.connect("history.db")
     c = conn.cursor()
     c.execute(
         "INSERT INTO resumes (original, summary) VALUES (?, ?)",
         (original, summary)
+    )
+    conn.commit()
+    conn.close()
+
+def save_task(description: str, due_date):
+    conn = sqlite3.connect("history.db")
+    c = conn.cursor()
+    c.execute(
+        "INSERT INTO tasks (description, due_date) VALUES (?, ?)",
+        (description, str(due_date))
+    )
+    conn.commit()
+    conn.close()
+
+def toggle_task(task_id: int):
+    conn = sqlite3.connect("history.db")
+    c = conn.cursor()
+    c.execute(
+        "UPDATE tasks SET is_done = 1 - is_done WHERE id = ?",
+        (task_id,)
     )
     conn.commit()
     conn.close()
