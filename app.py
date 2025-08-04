@@ -44,6 +44,7 @@ summarizer = pipeline(
 # --- Écran d'accueil ---
 st.title("Assistant personnel")
 
+
 # 1) Initialise le flag
 if "started" not in st.session_state:
     st.session_state.started = False
@@ -51,17 +52,16 @@ if "started" not in st.session_state:
 # 2) Splash screen
 if not st.session_state.started:
     st.write("Bienvenue ! Cliquez pour lancer l'assistant IA.")
-    
-    # Si on clique, on passe started à True et Streamlit relance tout
     if st.button("Lancer l’assistant IA"):
+        # Si on clique, on passe started à True et on continue l’exécution
         st.session_state.started = True
     else:
-        # Si on n'a PAS cliqué, on coupe l'exécution ici
+        # Si on n'a PAS cliqué, on coupe ici
         st.stop()
 
-# ← Là, on sait que started == True
+# → À partir d'ici, session_state.started == True
 
-# 3) Bouton Retour (visible seulement après le splash)
+# 3) Bouton Retour
 if st.button("⬅️ Retour"):
     st.session_state.started = False
 
