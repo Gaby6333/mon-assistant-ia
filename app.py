@@ -44,21 +44,24 @@ summarizer = pipeline(
 # --- Écran d'accueil ---
 st.title("Assistant personnel")
 
-# 1) Initialise le flag dans la session si besoin
+# 1) Initialise le flag
 if "started" not in st.session_state:
     st.session_state.started = False
 
+# 2) Splash screen
 if not st.session_state.started:
-    st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l’assistant IA.")
+    st.write("Bienvenue ! Cliquez pour lancer l'assistant IA.")
     if st.button("Lancer l’assistant IA"):
         st.session_state.started = True
-    st.stop()  # arrête tout ici ; le prochain clic sur le bouton relancera le script
+        st.experimental_rerun()   # force le rerun dès ce clic
+    else:
+        st.stop()                 # on coupe l'exécution uniquement si on n'a PAS cliqué
 
-
-# Dès qu'on est dans l'UI principale
+# → Ici, on sait que started == True
+# Tu peux proposer ton bouton Retour puis tes onglets :
 if st.button("⬅️ Retour"):
     st.session_state.started = False
-
+    st.experimental_rerun()
 
 # → Dès ce point, session_state.started == True
 #    on peut afficher les onglets Résumé / Historique
