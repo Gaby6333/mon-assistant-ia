@@ -43,18 +43,25 @@ summarizer = pipeline(
 
 # --- Écran d'accueil ---
 st.title("🧠 Résumeur de texte intelligent")
+
+# 1) Initialise le flag dans la session si besoin
 if "started" not in st.session_state:
     st.session_state.started = False
 
+# 2) Tant que l'utilisateur n'a pas cliqué, on reste ici
 if not st.session_state.started:
-    st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l'assistant IA.")
+    st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l’assistant IA.")
     if st.button("Lancer l'assistant IA"):
+        # 3) On met à True et on relance immédiatement le script
         st.session_state.started = True
-    else:
-        st.stop()
+        st.experimental_rerun()
+    # 4) Sinon on stoppe l'exécution (on ne passe pas aux onglets)
+    st.stop()
 
-# --- Interface principale après démarrage ---
+# → Dès ce point, session_state.started == True
+#    on peut afficher les onglets Résumé / Historique
 tab1, tab2 = st.tabs(["Résumé", "Historique"])
+
 
 with tab1:
     st.header("Résumé de texte")
