@@ -41,22 +41,21 @@ summarizer = pipeline(
     device=-1
 )
 
-# --- Écran d'accueil ---
-st.title("Assistant personnel")
-
+# --- Splash screen + bouton de lancement ---
+st.title("🧠 Assistant personnel")
 
 # 1) Initialise le flag
 if "started" not in st.session_state:
     st.session_state.started = False
 
-# 2) Splash screen
+# 2) Tant que l'on n'a pas cliqué, on reste sur le splash
 if not st.session_state.started:
-    st.write("Bienvenue ! Cliquez pour lancer l'assistant IA.")
+    st.write("Bienvenue ! Cliquez pour lancer l’assistant IA.")
+    # Si je clique : je passe started à True et je continue CE MÊME run
     if st.button("Lancer l’assistant IA"):
-        # Si on clique, on passe started à True et on continue l’exécution
         st.session_state.started = True
     else:
-        # Si on n'a PAS cliqué, on coupe ici
+        # Si je n'ai PAS cliqué, j'arrête tout ici
         st.stop()
 
 # → À partir d'ici, session_state.started == True
