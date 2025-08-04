@@ -48,24 +48,22 @@ st.title("Assistant personnel")
 if "started" not in st.session_state:
     st.session_state.started = False
 
-# 2) Tant que l'utilisateur n'a pas cliqué, on reste ici
 if not st.session_state.started:
     st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l’assistant IA.")
-    if st.button("Lancer l'assistant IA"):
-        # 3) On met à True et on relance immédiatement le script
+    if st.button("Lancer l’assistant IA"):
         st.session_state.started = True
-        st.experimental_rerun()
-    # 4) Sinon on stoppe l'exécution (on ne passe pas aux onglets)
-    st.stop()
+    st.stop()  # arrête tout ici ; le prochain clic sur le bouton relancera le script
 
-# → On est sûr d'être dans la partie principale (started == True)
+
+# Dès qu'on est dans l'UI principale
 if st.button("⬅️ Retour"):
     st.session_state.started = False
-    st.experimental_rerun()
+
 
 # → Dès ce point, session_state.started == True
 #    on peut afficher les onglets Résumé / Historique
-tab1, tab2 = st.tabs(["Résumé", "Historique"])
+if st.session_state.started:
+    tab1, tab2 = st.tabs(["Résumé", "Historique"])
 
 
 with tab1:
