@@ -77,4 +77,4 @@ with tab2:
     for _, row in df.iterrows():
         title = row['summary'][:50] + ("..." if len(row['summary'])>50 else "")
         with st.expander(f"{title} — {row['timestamp']}"):
-            st.write(row['summary'])
+            st.write(row['summary']) 
