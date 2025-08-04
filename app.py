@@ -31,28 +31,27 @@ def save_summary(original: str, summary: str):
     conn.commit()
     conn.close()
 
-
-# Init DB
+# Initialisation de la DB
 init_db()
 
-# Chargement du pipeline de résumé (force CPU)
+# Chargement du pipeline de résumé (forcé CPU)
 summarizer = pipeline(
     "summarization",
     model="facebook/bart-large-cnn",
     device=-1
 )
 
-# --- Écran d'accueil avec bouton pour démarrer ---
+# --- Écran d'accueil ---
 st.title("🧠 Résumeur de texte intelligent")
 if "started" not in st.session_state:
     st.session_state.started = False
 
 if not st.session_state.started:
-    st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l'assistant IA.")
+    st.write("Bienvenue ! Cliquez ci-dessous pour accéder à l'assistant IA.")
     if st.button("Lancer l'assistant IA"):
         st.session_state.started = True
-        st.experimental_rerun()
-    st.stop()
+    else:
+        st.stop()
 
 # --- Interface principale après démarrage ---
 tab1, tab2 = st.tabs(["Résumé", "Historique"])
