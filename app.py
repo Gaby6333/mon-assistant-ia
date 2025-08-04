@@ -66,10 +66,22 @@ tab1, tab2 = st.tabs(["Résumé", "Historique"])
 with tab1:
     st.header("Résumé de texte")
     texte = st.text_area("Colle ici ton texte à résumer 👇")
+
+    # On ne charge le modèle QUE quand on en a besoin
     if st.button("Résumer le texte"):
-        with st.spinner("Je réfléchis... 🤔"):
-            resultat = summarizer(texte, max_length=100, min_length=25, do_sample=False)
-            summary_text = resultat[0]['summary_text']
+        with st.spinner("Chargement du modèle et réflexion... 🤔"):
+            summarizer = pipeline(          # <— ici, pas en haut
+                "summarization",
+                model="facebook/bart-large-cnn",
+                device=-1
+            )
+            resultat = summarizer(
+                texte,
+                max_length=100,
+                min_length=25,
+                do_sample=False
+            )
+            summary_text = resultat[0]["summary_text"]
             st.success("Résumé :")
             st.write(summary_text)
             save_summary(texte, summary_text)
