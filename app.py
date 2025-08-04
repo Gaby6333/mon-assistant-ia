@@ -21,7 +21,7 @@ def init_db():
     conn.close()
 
 # Fonction pour sauvegarder un résumé
-" save_summary""" def save_summary(original: str, summary: str):
+def save_summary(original: str, summary: str):
     conn = sqlite3.connect("history.db")
     c = conn.cursor()
     c.execute(
@@ -30,6 +30,7 @@ def init_db():
     )
     conn.commit()
     conn.close()
+
 
 # Init DB
 init_db()
