@@ -35,7 +35,7 @@ def save_summary(original: str, summary: str):
 init_db()
 
 # --- Interface Streamlit ---
-st.title("🧠 Résumeur de texte intelligent")
+st.title("Résumer un texte")
 
 # Onglets pour la navigation juste sous le titre
 tab1, tab2 = st.tabs(["Résumé", "Historique"])
