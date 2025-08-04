@@ -51,19 +51,19 @@ if "started" not in st.session_state:
 # 2) Splash screen
 if not st.session_state.started:
     st.write("Bienvenue ! Cliquez pour lancer l'assistant IA.")
+    
+    # Si on clique, on passe started à True et Streamlit relance tout
     if st.button("Lancer l’assistant IA"):
-        # Premier clic met started à True ...
         st.session_state.started = True
-        # ... et on continue (PAS de st.stop())
     else:
-        # Si on n'a pas cliqué, on coupe le run ici
+        # Si on n'a PAS cliqué, on coupe l'exécution ici
         st.stop()
 
-# → Ici, on sait que started == True
-# Tu peux proposer ton bouton Retour puis tes onglets :
+# ← Là, on sait que started == True
+
+# 3) Bouton Retour (visible seulement après le splash)
 if st.button("⬅️ Retour"):
     st.session_state.started = False
-    st.experimental_rerun()
 
 # → Dès ce point, session_state.started == True
 #    on peut afficher les onglets Résumé / Historique
