@@ -52,7 +52,7 @@ qa_pipeline = pipeline(
 st.title("🧠 Assistant IA personnel")
 
 # Création des onglets pour séparer les fonctionnalités
-tab1, tab2, tab3 = st.tabs(["Résumé", "Historique", "Assistant Q&A"])
+tab1, tab2 = st.tabs(["Résumé", "Historique"])
 
 # Onglet 1 : Résumé de texte
 with tab1:
