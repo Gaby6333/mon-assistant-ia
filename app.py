@@ -52,10 +52,12 @@ if "started" not in st.session_state:
 if not st.session_state.started:
     st.write("Bienvenue ! Cliquez pour lancer l'assistant IA.")
     if st.button("Lancer l’assistant IA"):
+        # Premier clic met started à True ...
         st.session_state.started = True
-        st.experimental_rerun()   # force le rerun dès ce clic
+        # ... et on continue (PAS de st.stop())
     else:
-        st.stop()                 # on coupe l'exécution uniquement si on n'a PAS cliqué
+        # Si on n'a pas cliqué, on coupe le run ici
+        st.stop()
 
 # → Ici, on sait que started == True
 # Tu peux proposer ton bouton Retour puis tes onglets :
