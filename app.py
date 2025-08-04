@@ -31,42 +31,52 @@ def save_summary(original: str, summary: str):
     conn.commit()
     conn.close()
 
-# Initialisation de la DB
+# Appel de l'initialisation de la base
 init_db()
 
-# --- Interface Streamlit ---
-st.title("Résumer un texte")
+# --- Assure-toi d'avoir les pipelines chargés ---
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+qa_pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
 
-# Onglets pour la navigation juste sous le titre
-tab1, tab2 = st.tabs(["Résumé", "Historique"])
+# --- Interface Streamlit ---
+st.title("🧠 Assistant IA personnel")
+
+tab1, tab2, tab3 = st.tabs(["Résumé", "Historique", "Assistant Q&A"])
 
 with tab1:
-    st.header("Créer un nouveau résumé")
+    st.header("Résumé de texte")
     texte = st.text_area("Colle ici ton texte à résumer 👇")
     if st.button("Résumer le texte"):
         with st.spinner("Je réfléchis... 🤔"):
-            summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
             resultat = summarizer(texte, max_length=100, min_length=25, do_sample=False)
             summary_text = resultat[0]['summary_text']
-            st.success("Résumé généré !")
+            st.success("Résumé :")
             st.write(summary_text)
             save_summary(texte, summary_text)
 
 with tab2:
     st.header("Historique des résumés")
-    # Récupération des données
     conn = sqlite3.connect("history.db")
     df = pd.read_sql_query(
-        "SELECT timestamp, original, summary FROM resumes ORDER BY timestamp DESC", conn
+        "SELECT timestamp, summary FROM resumes ORDER BY timestamp DESC", conn
     )
     conn.close()
-    # Mise en forme du timestamp
-    df['timestamp'] = pd.to_datetime(df['timestamp']).dt.strftime('%Y-%m-%d %H:%M:%S')
-    # Affichage sous forme d'expanders avec un extrait du résumé comme titre
-    for idx, row in df.iterrows():
-        # Utilisation d'un extrait du résumé pour le titre de l'expander
-        title_excerpt = (row['summary'][:50] + '...') if len(row['summary']) > 50 else row['summary']
-        with st.expander(title_excerpt, expanded=False):
-            st.markdown(f"**Date :** {row['timestamp']}")
-            st.markdown(f"**Résumé complet :**\n{row['summary']}")
-            st.markdown(f"**Texte original (extrait) :**\n> {row['original'][:200]}{'...' if len(row['original']) > 200 else ''}") 
+    # Affiche chaque résumé dans un expander avec titre extrait
+    for _, row in df.iterrows():
+        title = row['summary'][:50] + ("..." if len(row['summary'])>50 else "")
+        with st.expander(f"{title} 🤖 — {row['timestamp']}"):
+            st.write(row['summary'])
+
+with tab3:
+    st.header("Assistant Q&A")
+    st.write("Posez une question en fournissant un contexte ci-dessous :")
+    context = st.text_area("Contexte (ex. : ton cours, tes notes)", height=200)
+    question = st.text_input("Ta question 👇")
+    if st.button("Répondre à la question"):
+        if context and question:
+            with st.spinner("Recherche de la réponse... 🕵️‍♂️"):
+                answer = qa_pipeline(question=question, context=context)
+                st.success("Réponse :")
+                st.write(f"**{answer['answer']}** (score: {answer['score']:.2f})")
+        else:
+            st.error("Veuillez fournir à la fois un contexte et une question.")
