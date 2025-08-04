@@ -21,7 +21,7 @@ def init_db():
     conn.close()
 
 # Fonction pour sauvegarder un résumé
- def save_summary(original: str, summary: str):
+" save_summary""" def save_summary(original: str, summary: str):
     conn = sqlite3.connect("history.db")
     c = conn.cursor()
     c.execute(
@@ -75,6 +75,6 @@ with tab2:
     )
     conn.close()
     for _, row in df.iterrows():
-        title = row['summary'][:50] + ("..." if len(row['summary'])>50 else "")
+        title = row['summary'][:50] + ("..." if len(row['summary']) > 50 else "")
         with st.expander(f"{title} — {row['timestamp']}"):
-            st.write(row['summary']) 
+            st.write(row['summary'])
