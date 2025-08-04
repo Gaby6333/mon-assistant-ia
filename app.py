@@ -31,18 +31,17 @@ def save_summary(original: str, summary: str):
     conn.commit()
     conn.close()
 
-# Appel de l'initialisation de la base
+# Initialisation de la DB
 init_db()
 
 # --- Interface Streamlit ---
 st.title("🧠 Résumeur de texte intelligent")
 
-# Navigation dans la sidebar
-en_cours = st.sidebar.radio(
-    "Navigation", ["Résumé", "Historique"]
-)
+# Onglets pour la navigation juste sous le titre
+tab1, tab2 = st.tabs(["Résumé", "Historique"])
 
-if en_cours == "Résumé":
+with tab1:
+    # Module Résumé
     texte = st.text_area("Colle ici ton texte à résumer 👇")
     if st.button("Résumer le texte"):
         with st.spinner("Je réfléchis... 🤔"):
@@ -51,10 +50,10 @@ if en_cours == "Résumé":
             summary_text = resultat[0]['summary_text']
             st.success("Résumé :")
             st.write(summary_text)
-            # Sauvegarde du résumé en base
             save_summary(texte, summary_text)
 
-elif en_cours == "Historique":
+with tab2:
+    # Module Historique
     st.subheader("Historique des résumés")
     conn = sqlite3.connect("history.db")
     df = pd.read_sql_query(
