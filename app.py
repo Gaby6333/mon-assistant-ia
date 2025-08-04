@@ -69,4 +69,4 @@ with tab2:
         with st.expander(title_excerpt, expanded=False):
             st.markdown(f"**Date :** {row['timestamp']}")
             st.markdown(f"**Résumé complet :**\n{row['summary']}")
-            st.markdown(f"**Texte original (extrait) :**\n> {row['original'][:200]}{'...' if len(row['original']) > 200 else ''}")
+            st.markdown(f"**Texte original (extrait) :**\n> {row['original'][:200]}{'...' if len(row['original']) > 200 else ''}") 
