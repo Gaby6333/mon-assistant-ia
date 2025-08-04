@@ -38,9 +38,7 @@ init_db()
 # pipeline de résumé de texte
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 # pipeline de question-réponse
-qa_pipeline = pipeline(
-    "question-answering", model="distilbert-base-cased-distilled-squad"
-)
+qa_pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
 
 # --- Interface Streamlit ---
 st.title("🧠 Assistant IA personnel")
