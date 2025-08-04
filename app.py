@@ -62,8 +62,11 @@ with tab2:
     conn.close()
     # Mise en forme du timestamp
     df['timestamp'] = pd.to_datetime(df['timestamp']).dt.strftime('%Y-%m-%d %H:%M:%S')
-    # Affichage sous forme d'expanders pour plus de lisibilité
+    # Affichage sous forme d'expanders avec un extrait du résumé comme titre
     for idx, row in df.iterrows():
-        with st.expander(f"Résumé du {row['timestamp']}", expanded=False):
-            st.markdown(f"**Résumé :**\n{row['summary']}")
-            st.markdown(f"**Texte original :**\n> {row['original'][:200]}{'...' if len(row['original'])>200 else ''}")
+        # Utilisation d'un extrait du résumé pour le titre de l'expander
+        title_excerpt = (row['summary'][:50] + '...') if len(row['summary']) > 50 else row['summary']
+        with st.expander(title_excerpt, expanded=False):
+            st.markdown(f"**Date :** {row['timestamp']}")
+            st.markdown(f"**Résumé complet :**\n{row['summary']}")
+            st.markdown(f"**Texte original (extrait) :**\n> {row['original'][:200]}{'...' if len(row['original']) > 200 else ''}")
