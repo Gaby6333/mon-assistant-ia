@@ -1,5 +1,5 @@
 import streamlit as st
-from transformers import pipeline
+from transformers.pipelines import pipeline
 
 st.title("🧠 Résumeur de texte intelligent")
 
