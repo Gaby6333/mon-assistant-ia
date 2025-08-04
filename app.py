@@ -42,7 +42,7 @@ summarizer = pipeline(
 )
 
 # --- Écran d'accueil ---
-st.title("🧠 Résumeur de texte intelligent")
+st.title("Assistant personnel")
 
 # 1) Initialise le flag dans la session si besoin
 if "started" not in st.session_state:
