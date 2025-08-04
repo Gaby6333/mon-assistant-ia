@@ -58,6 +58,11 @@ if not st.session_state.started:
     # 4) Sinon on stoppe l'exécution (on ne passe pas aux onglets)
     st.stop()
 
+# → On est sûr d'être dans la partie principale (started == True)
+if st.button("⬅️ Retour"):
+    st.session_state.started = False
+    st.experimental_rerun()
+
 # → Dès ce point, session_state.started == True
 #    on peut afficher les onglets Résumé / Historique
 tab1, tab2 = st.tabs(["Résumé", "Historique"])
