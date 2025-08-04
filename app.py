@@ -36,9 +36,17 @@ init_db()
 
 # --- Chargement des pipelines ML à l'avance ---
 # pipeline de résumé de texte
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    device=-1       # force l'utilisation du CPU
+)
 # pipeline de question-réponse
-qa_pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
+qa_pipeline = pipeline(
+    "question-answering",
+    model="distilbert-base-cased-distilled-squad",
+    device=-1       # idem pour le module Q&A
+)
 
 # --- Interface Streamlit ---
 st.title("🧠 Assistant IA personnel")
@@ -79,31 +87,3 @@ with tab2:
         with st.expander(f"{title} — {row['timestamp']}"):
             st.write(row["summary"])
 
-# Onglet 3 : Assistant Q&A
-# Propose un champ de contexte et une question libre.
-# Lorsque tu valides, qa_pipeline cherche la réponse dans le contexte
-# et affiche la meilleure proposition avec son score.
-with tab3:
-    st.header("Assistant Q&A")
-    st.write(
-        "Posez une question en fournissant un contexte ci-dessous :"
-    )
-    context = st.text_area(
-        "Contexte (ex. : ton cours, tes notes)", height=200
-    )
-    question = st.text_input("Ta question 👇")
-    if st.button("Répondre à la question"):
-        if context and question:
-            with st.spinner("Recherche de la réponse... 🕵️‍♂️"):
-                answer = qa_pipeline(
-                    question=question,
-                    context=context
-                )
-                st.success("Réponse :")
-                st.write(
-                    f"**{answer['answer']}** (score: {answer['score']:.2f})"
-                )
-        else:
-            st.error(
-                "Veuillez fournir à la fois un contexte et une question."
-            )
