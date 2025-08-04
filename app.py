@@ -41,24 +41,29 @@ st.title("Résumer un texte")
 tab1, tab2 = st.tabs(["Résumé", "Historique"])
 
 with tab1:
-    # Module Résumé
+    st.header("Créer un nouveau résumé")
     texte = st.text_area("Colle ici ton texte à résumer 👇")
     if st.button("Résumer le texte"):
         with st.spinner("Je réfléchis... 🤔"):
             summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
             resultat = summarizer(texte, max_length=100, min_length=25, do_sample=False)
             summary_text = resultat[0]['summary_text']
-            st.success("Résumé :")
+            st.success("Résumé généré !")
             st.write(summary_text)
             save_summary(texte, summary_text)
 
 with tab2:
-    # Module Historique
-    st.subheader("Historique des résumés")
+    st.header("Historique des résumés")
+    # Récupération des données
     conn = sqlite3.connect("history.db")
     df = pd.read_sql_query(
-        "SELECT id, timestamp, summary FROM resumes ORDER BY timestamp DESC",
-        conn
+        "SELECT timestamp, original, summary FROM resumes ORDER BY timestamp DESC", conn
     )
     conn.close()
-    st.dataframe(df)
+    # Mise en forme du timestamp
+    df['timestamp'] = pd.to_datetime(df['timestamp']).dt.strftime('%Y-%m-%d %H:%M:%S')
+    # Affichage sous forme d'expanders pour plus de lisibilité
+    for idx, row in df.iterrows():
+        with st.expander(f"Résumé du {row['timestamp']}", expanded=False):
+            st.markdown(f"**Résumé :**\n{row['summary']}")
+            st.markdown(f"**Texte original :**\n> {row['original'][:200]}{'...' if len(row['original'])>200 else ''}")
